@@ -13,7 +13,7 @@
 <head>
   <title>Notification Demo</title>
   <link href="style.css" rel="stylesheet" type="text/css">
-  <script src="options.js"></script>
+  <script src="options.js" async></script>
 </head>
 
 <body>
@@ -21,9 +21,20 @@
     <img src="64.png" alt="Toast">
     Notification Demo
   </h1>
+  <div>
+    <p>Select the folders for which notification should be activated.</p>
+   <!--  <button id="refersh">Refersh folder</button> -->
+    <div>
+      <ul id="folderList" style="list-style-type:none">
+      </ul>
+
+    </div>
+    <button id="save">Save Changes</button>
+  </div>
   <h2>Options</h2>
   <form id="options">
     URL: <input type="text" name="Url">
+
     <input type="checkbox" name="isActivated" checked>
     Display a notification every
     <select name="frequency">
