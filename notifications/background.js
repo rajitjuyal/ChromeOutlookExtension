@@ -1,10 +1,10 @@
 var title = "";
-let folders = ["JIRA", "Jenkins", "Processpp16"];
+let folders = [];
 var myMap = new Map();
 
 function getUnreadCount(current, folderName) {
   chrome.tabs.executeScript(current.id, {
-    code: 'document.querySelectorAll("[title=' + folderName + '] > span:nth-child(3)>span:first-child")[0].innerText'
+    code: 'document.querySelectorAll("[title=\'' + folderName + '\'] > span:nth-child(3)>span:first-child")[0].innerText'
   }, function (result) {
     if (result[0] !== null) {
       // console.log(result[0]);
@@ -29,12 +29,22 @@ function getUnreadCount(current, folderName) {
 
 function show() {
   chrome.tabs.query({
-    pinned: true,
+    url: "https://outlook.office365.com/mail/*",
   }, function (tabs) {
     var current = tabs[0];
+    if(current == null) {
+    	return;
+    }
     title = current.url;
+    
+    chrome.storage.local.get('activatedFolderIds', function (result) {
+	    console.log(result.activatedFolderIds);
+	    folders = [];
+	    folders.push(result.activatedFolderIds);
+	  });
+    
     console.log(folders);
-    folders.map(a => getUnreadCount(current, a));
+    folders.map(a => getUnreadCount(current, a[0]));
   });
 
 }
@@ -50,9 +60,12 @@ if (!localStorage.isInitialized) {
 // Test for notification support.
 if (window.Notification) {
   // While activated, show notifications at the display frequency.
-  if (JSON.parse(localStorage.isActivated)) {
-    show();
-  }
+// if (JSON.parse(localStorage.isActivated)) {
+// show();
+// }
+  
+  
+  show();
 
   var interval = 0; // The display interval, in minutes.
 

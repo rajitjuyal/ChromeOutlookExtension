@@ -32,5 +32,16 @@ div p {
   padding: 3px 5px;
   font-size: 100%;
   font-weight: bold;
+}
 
+#folderList {
+	list-style-type: none;
+    display: grid;
+    grid-column-gap: 50px;
+    grid-row-gap: 20px;
+    grid-template-columns: auto auto auto auto auto;
+}
+
+li > input[type="checkbox"] {
+    margin: 7px;
 }
