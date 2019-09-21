@@ -10,7 +10,9 @@ body {
   font: 84% Arial, sans-serif
 }
 
-h1 { font-size: 156% }
+h1 {
+  font-size: 156%
+}
 
 h1 img {
   margin: 1px 5px 0 1px;
@@ -22,4 +24,13 @@ h2 {
   background-color: #ebeff9;
   padding: 3px 5px;
   font-size: 100%
+}
+
+div p {
+  border-top: 1px solid #9cc2ef;
+  background-color: #ebeff9;
+  padding: 3px 5px;
+  font-size: 100%;
+  font-weight: bold;
+
 }
