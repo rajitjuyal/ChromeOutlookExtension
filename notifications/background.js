@@ -32,19 +32,19 @@ function show() {
     url: ["https://outlook.office365.com/mail/*", "https://outlook.office.com/mail/*"]
   }, function (tabs) {
     var current = tabs[0];
-    if(current == null) {
-    	return;
+    if (current == null) {
+      return;
     }
     title = current.url;
-    
+
     chrome.storage.local.get('activatedFolderIds', function (result) {
-	    console.log(result.activatedFolderIds);
-	    folders = [];
-	    folders.push(result.activatedFolderIds);
-	  });
-    
+      console.log(result.activatedFolderIds);
+      folders = [];
+      folders = [...result.activatedFolderIds];
+    });
+
     console.log(folders);
-    folders.map(a => getUnreadCount(current, a[0]));
+    folders.map(a => getUnreadCount(current, a));
   });
 
 }
@@ -60,11 +60,11 @@ if (!localStorage.isInitialized) {
 // Test for notification support.
 if (window.Notification) {
   // While activated, show notifications at the display frequency.
-// if (JSON.parse(localStorage.isActivated)) {
-// show();
-// }
-  
-  
+  // if (JSON.parse(localStorage.isActivated)) {
+  // show();
+  // }
+
+
   show();
 
   var interval = 0; // The display interval, in minutes.
