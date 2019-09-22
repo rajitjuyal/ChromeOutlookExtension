@@ -34,7 +34,7 @@ document.getElementById('save').addEventListener('click', saveActivatedFolderLis
 
 function getAllFolder() {
   chrome.tabs.query({
-	  url: "https://outlook.office365.com/mail/*",
+	  url: ["https://outlook.office365.com/mail/*", "https://outlook.office.com/mail/*"],
   }, function (tabs) {
     var current = tabs[0];
     console.log(current);
@@ -102,7 +102,7 @@ function getAllFolder() {
 
 function saveActivatedFolderList() {
 	chrome.tabs.query({
-		url: "https://outlook.office365.com/mail/*"
+		url: ["https://outlook.office365.com/mail/*", "https://outlook.office.com/mail/*"]
 	}, function (tabs) {
 
 		var current = tabs[0];
