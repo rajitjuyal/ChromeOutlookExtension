@@ -29,7 +29,7 @@ function getUnreadCount(current, folderName) {
 
 function show() {
   chrome.tabs.query({
-    url: "https://outlook.office365.com/mail/*",
+    url: ["https://outlook.office365.com/mail/*", "https://outlook.office.com/mail/*"]
   }, function (tabs) {
     var current = tabs[0];
     if(current == null) {
