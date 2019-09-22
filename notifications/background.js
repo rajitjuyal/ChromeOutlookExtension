@@ -38,12 +38,10 @@ function show() {
     title = current.url;
 
     chrome.storage.local.get('activatedFolderIds', function (result) {
-      console.log(result.activatedFolderIds);
       folders = [];
-      folders = [...result.activatedFolderIds];
+      if (result.length > 0)
+        folders = [...result.activatedFolderIds];
     });
-
-    console.log(folders);
     folders.map(a => getUnreadCount(current, a));
   });
 
