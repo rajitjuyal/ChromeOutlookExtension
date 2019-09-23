@@ -13,7 +13,7 @@ function getUnreadCount(current, folderName) {
         myMap.set(folderName, parseInt(msg));
         new Notification(`${folderName} has ${msg} unread mails`, {
           icon: '48.png',
-          body: 'Time to make the toast.'
+          body: 'Check your mail.'
         });
       } else {
         myMap.set(folderName, parseInt(msg));
