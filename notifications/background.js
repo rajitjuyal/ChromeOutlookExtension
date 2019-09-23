@@ -51,7 +51,6 @@ function show() {
 // Conditionally initialize the options.
 if (!localStorage.isInitialized) {
   localStorage.isActivated = true; // The display activation.
-  localStorage.frequency = 1; // The display frequency, in minutes.
   localStorage.isInitialized = true; // The option initialization.
 }
 
@@ -65,14 +64,13 @@ if (window.Notification) {
 
   show();
 
-  var interval = 0; // The display interval, in minutes.
+  //var interval = 0; // The display interval, in minutes.
 
   setInterval(function () {
-    interval++;
+    //sinterval++;
 
     if (
-      JSON.parse(localStorage.isActivated) &&
-      localStorage.frequency <= interval
+      JSON.parse(localStorage.isActivated)
     ) {
       show();
       interval = 0;

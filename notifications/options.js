@@ -1,15 +1,22 @@
 function ghost(isDeactivated) {
   options.style.color = isDeactivated ? 'graytext' : 'black';
   // The label color.
-  options.frequency.disabled = isDeactivated; // The control manipulability.
+  let folderDiv = document.getElementById("folderDiv");
+  folderDiv.disabled = isDeactivated; // The control manipulability.
+  let saveBtn = document.getElementById("save");
+  saveBtn.disabled = isDeactivated; // The control manipulability.
+  
+  let folderNames = document.getElementsByClassName("folderNames");
+  for(let folderName of folderNames) {
+	  folderName.disabled = true;
+  }
+  
 }
 
 window.addEventListener('load', function () {
   // Initialize the option controls.
   options.isActivated.checked = JSON.parse(localStorage.isActivated);
   // The display activation.
-  options.frequency.value = localStorage.frequency;
-  // The display frequency, in minutes.
 
   if (!options.isActivated.checked) {
     ghost(true);
@@ -19,10 +26,6 @@ window.addEventListener('load', function () {
   options.isActivated.onchange = function () {
     localStorage.isActivated = options.isActivated.checked;
     ghost(!options.isActivated.checked);
-  };
-
-  options.frequency.onchange = function () {
-    localStorage.frequency = options.frequency.value;
   };
 
   getAllFolder();
@@ -37,7 +40,9 @@ function getAllFolder() {
     url: ["https://outlook.office365.com/mail/*", "https://outlook.office.com/mail/*"],
   }, function (tabs) {
     var current = tabs[0];
-    console.log(current);
+    if(!current) {
+    	return;
+    }
     chrome.tabs.executeScript(current.id, {
       code: `var x= document.querySelectorAll(\"div[role=treeitem]\");
       var arr=[];
@@ -106,7 +111,9 @@ function saveActivatedFolderList() {
   }, function (tabs) {
 
     var current = tabs[0];
-    console.log(current);
+    if(!current) {
+    	return;
+    }
 
     var x = document.querySelectorAll("input.folderNames[type=checkbox]:checked");
     var activatedFolderNames = [];
