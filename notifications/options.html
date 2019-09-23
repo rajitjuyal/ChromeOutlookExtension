@@ -11,46 +11,29 @@
 <html>
 
 <head>
-  <title>Notification Demo</title>
-  <link href="style.css" rel="stylesheet" type="text/css">
-  <script src="options.js" async></script>
+<title>Notification Demo</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+<script src="options.js" async></script>
 </head>
 
 <body>
-  <h1>
-    <img src="64.png" alt="Toast">
-    Notification Demo
-  </h1>
-  <div>
-    <p>Select the folders for which notification should be activated.</p>
-   <!--  <button id="refersh">Refersh folder</button> -->
-    <div>
-      <ul id="folderList" style="list-style-type:none">
-      </ul>
+	<h1>
+		<img src="64.png" alt="Toast"> Notification Demo
+	</h1>
+	<div>
+		<p>Select the folders for which notification should be activated.</p>
+		<form id="options">
+			<input id="notify" type="checkbox" name="isActivated" checked>
+			<label for="notify">Display notification</label>
+			<!--  <button id="refersh">Refersh folder</button> -->
+			<div id="folderDiv">
+				<ul id="folderList" style="list-style-type: none">
+				</ul>
 
-    </div>
-    <button id="save">Save Changes</button>
-  </div>
-  <h2>Options</h2>
-  <form id="options">
-    URL: <input type="text" name="Url">
-
-    <input type="checkbox" name="isActivated" checked>
-    Display a notification every
-    <select name="frequency">
-      <option>1</option>
-      <option>2</option>
-      <option>3</option>
-      <option>4</option>
-      <option>5</option>
-      <option>10</option>
-      <option>15</option>
-      <option>20</option>
-      <option>25</option>
-      <option>30</option>
-    </select>
-    minute(s).
-  </form>
+			</div>
+			<button id="save">Save Changes</button>
+		</form>
+	</div>
 </body>
 
 </html>
