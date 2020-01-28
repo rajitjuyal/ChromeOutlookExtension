@@ -26,6 +26,20 @@ function getUnreadCount(current, folderName) {
 
 }
 
+function getUpComingMeeting(current) {
+  chrome.tabs.executeScript(current.id, {
+    code: 'document.querySelectorAll("[data-storybook=\'reminder\']")[0].innerText'
+  }, function (result) {
+    
+    if(result!= ""){
+      new Notification(`Reminder`, {
+        icon: '48.png',
+        body: `${result}`
+      });
+      }
+  });
+
+}
 
 function show() {
   chrome.tabs.query({
@@ -44,6 +58,8 @@ function show() {
         folders.map(a => getUnreadCount(current, a));
       }
     });
+
+    getUpComingMeeting(current);
     
   });
 
