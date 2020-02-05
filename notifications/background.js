@@ -1,6 +1,7 @@
 var title = "";
 let folders = [];
 var myMap = new Map();
+let stop =true;
 
 function getUnreadCount(current, folderName) {
   chrome.tabs.executeScript(current.id, {
@@ -25,21 +26,46 @@ function getUnreadCount(current, folderName) {
   });
 
 }
-
 function getUpComingMeeting(current) {
   chrome.tabs.executeScript(current.id, {
-    code: 'document.querySelectorAll("[data-storybook=\'reminder\']")[0].innerText'
+    code: 'document.querySelector("[data-automation-id=\'UpNext\']").innerText'
   }, function (result) {
     
-    if(result!= ""){
+    
+    console.log(result[0].includes("2 min"));
+    if(result!= "" && result[0].includes("Now") && stop){
       new Notification(`Reminder`, {
         icon: '48.png',
-        body: `${result}`
+        body: `${result[0]}`
       });
+      stop=false;
+      }
+
+        if(result!= "" && result[0].includes("5 min")){
+      new Notification(`Reminder`, {
+        icon: '48.png',
+        body: `${result[0]}`
+      });
+      }
+
+        if(result!= "" && result[0].includes("10 min")){
+      new Notification(`Reminder`, {
+        icon: '48.png',
+        body: `${result[0]}`
+      });
+      }
+
+       if(result!= "" && result[0].includes("15 min")){
+      new Notification(`Reminder`, {
+        icon: '48.png',
+        body: `${result[0]}`
+      });
+      stop=true;
       }
   });
 
 }
+
 
 function show() {
   chrome.tabs.query({
