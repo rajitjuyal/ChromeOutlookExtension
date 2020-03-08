@@ -11,9 +11,9 @@
 <html>
 
 <head>
-<title>Notification Demo</title>
-<link href="style.css" rel="stylesheet" type="text/css">
-<script src="options.js" async></script>
+	<title>Notification Demo</title>
+	<link href="style.css" rel="stylesheet" type="text/css">
+	<script src="options.js" async></script>
 </head>
 
 <body>
@@ -31,9 +31,23 @@
 				</ul>
 
 			</div>
+
+			<div>
+				<p>Meeting Notification</p>
+				<form id="meetoptions">
+
+					<input type="checkbox" name="15min" id="min15">15 min</input>
+					<input type="checkbox" name="10min" id="min10">10 min
+					<input type="checkbox" name="5min" id="min5"> 5 min
+					<input type="checkbox" name="custcheck" id="iscust">
+					<input type="number" name="Enter the custom min" id="custmin" min="1" , max="59" value="1">
+				</form>
+			</div>
+
 			<button id="save">Save Changes</button>
 		</form>
 	</div>
+
 </body>
 
 </html>

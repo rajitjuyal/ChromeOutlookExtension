@@ -5,12 +5,12 @@ function ghost(isDeactivated) {
   folderDiv.disabled = isDeactivated; // The control manipulability.
   let saveBtn = document.getElementById("save");
   saveBtn.disabled = isDeactivated; // The control manipulability.
-  
+
   let folderNames = document.getElementsByClassName("folderNames");
-  for(let folderName of folderNames) {
-	  folderName.disabled = true;
+  for (let folderName of folderNames) {
+    folderName.disabled = true;
   }
-  
+
 }
 
 window.addEventListener('load', function () {
@@ -28,6 +28,8 @@ window.addEventListener('load', function () {
     ghost(!options.isActivated.checked);
   };
 
+
+
   getAllFolder();
 });
 
@@ -36,12 +38,28 @@ window.addEventListener('load', function () {
 document.getElementById('save').addEventListener('click', saveActivatedFolderList);
 
 function getAllFolder() {
+  let min15 = document.getElementById("min15");
+  let min10 = document.getElementById("min10");
+  let min5 = document.getElementById("min5");
+  let iscust = document.getElementById("iscust");
+  if (JSON.parse(localStorage.min15)) {
+    min15.checked = true;
+  }
+  if (JSON.parse(localStorage.min10)) {
+    min10.checked = true;
+  }
+  if (JSON.parse(localStorage.min5)) {
+    min5.checked = true;
+  }
+  if (JSON.parse(localStorage.iscust)) {
+    iscust.checked = true;
+  }
   chrome.tabs.query({
     url: ["https://outlook.office365.com/mail/*", "https://outlook.office.com/mail/*"],
   }, function (tabs) {
     var current = tabs[0];
-    if(!current) {
-    	return;
+    if (!current) {
+      return;
     }
     chrome.tabs.executeScript(current.id, {
       code: `var x= document.querySelectorAll(\"div[role=treeitem]\");
@@ -106,13 +124,27 @@ function getAllFolder() {
 }
 
 function saveActivatedFolderList() {
+
+  let min15 = document.getElementById("min15");
+  localStorage.min15 = min15.checked;
+  let min10 = document.getElementById("min10");
+  localStorage.min10 = min10.checked;
+  let min5 = document.getElementById("min5");
+  localStorage.min5 = min5.checked;
+  let iscust = document.getElementById("iscust");
+  localStorage.iscust = iscust.checked;
+  let custmin = null;
+  if (iscust.checked) {
+    custmin = document.getElementById("custmin");
+    localStorage.custmin = custmin.value;
+  }
   chrome.tabs.query({
     url: ["https://outlook.office365.com/mail/*", "https://outlook.office.com/mail/*"]
   }, function (tabs) {
 
     var current = tabs[0];
-    if(!current) {
-    	return;
+    if (!current) {
+      return;
     }
 
     var x = document.querySelectorAll("input.folderNames[type=checkbox]:checked");

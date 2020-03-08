@@ -35,13 +35,21 @@ div p {
 }
 
 #folderList {
-	list-style-type: none;
-    display: grid;
-    grid-column-gap: 50px;
-    grid-row-gap: 20px;
-    grid-template-columns: auto auto auto auto auto;
+  list-style-type: none;
+  display: grid;
+  grid-column-gap: 50px;
+  grid-row-gap: 20px;
+  grid-template-columns: auto auto auto auto auto;
 }
 
-li > input[type="checkbox"] {
-    margin: 7px;
+input[type="number"] {
+  size: 3px;
+}
+
+li>input[type="checkbox"] {
+  margin: 7px;
+}
+
+button#save {
+  margin-top: 12px;
 }
