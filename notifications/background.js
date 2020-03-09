@@ -29,7 +29,7 @@ function getUnreadCount(current, folderName) {
 
 function getUpComingMeeting(current) {
   chrome.tabs.executeScript(current.id, {
-    code: 'document.querySelector("[data-automation-id=\'UpNext\']").innerText'
+    code: 'document.querySelector("[data-automation-id=\'UpNext\']>span>div>div>div").innerText'
   }, function (result) {
 
 
