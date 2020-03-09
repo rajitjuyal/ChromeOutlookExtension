@@ -6,14 +6,14 @@ function getUnreadCount(current, folderName) {
   chrome.tabs.executeScript(current.id, {
     code: 'document.querySelectorAll("[title=\'' + folderName + '\'] > span:nth-child(3)>span:first-child")[0].innerText'
   }, function (result) {
-    if (result[0] !== null) {
+    if (result && result[0] !== null) {
       // console.log(result[0]);
       let msg = result[0].split('\n')[0];
       if (myMap.has(folderName) && myMap.get(folderName) < parseInt(msg)) {
         myMap.set(folderName, parseInt(msg));
         new Notification(`${folderName} has ${msg} unread mails`, {
           icon: '48.png',
-          body: 'Time to make the toast.'
+          body: 'Check your mail.'
         });
       } else {
         myMap.set(folderName, parseInt(msg));
@@ -31,7 +31,7 @@ function show() {
   chrome.tabs.query({
     url: ["https://outlook.office365.com/mail/*", "https://outlook.office.com/mail/*"]
   }, function (tabs) {
-    var current = tabs[0];
+    var current = tabs ? tabs[0] : null;
     if (current == null) {
       return;
     }
@@ -39,10 +39,11 @@ function show() {
 
     chrome.storage.local.get('activatedFolderIds', function (result) {
       folders = [];
-      if (result.length > 0)
+     if (result.activatedFolderIds &&result.activatedFolderIds.length > 0) {
         folders = [...result.activatedFolderIds];
+        folders.map(a => getUnreadCount(current, a));
+      }
     });
-    folders.map(a => getUnreadCount(current, a));
   });
 
 }
