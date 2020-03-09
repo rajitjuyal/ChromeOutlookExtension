@@ -42,6 +42,7 @@ function getAllFolder() {
   let min10 = document.getElementById("min10");
   let min5 = document.getElementById("min5");
   let iscust = document.getElementById("iscust");
+  let custmin = document.getElementById("custmin");
   if (JSON.parse(localStorage.min15)) {
     min15.checked = true;
   }
@@ -54,6 +55,9 @@ function getAllFolder() {
   if (JSON.parse(localStorage.iscust)) {
     iscust.checked = true;
   }
+
+ custmin.value = JSON.parse(localStorage.custmin);
+ 
   chrome.tabs.query({
     url: ["https://outlook.office365.com/mail/*", "https://outlook.office.com/mail/*"],
   }, function (tabs) {
@@ -134,10 +138,10 @@ function saveActivatedFolderList() {
   let iscust = document.getElementById("iscust");
   localStorage.iscust = iscust.checked;
   let custmin = null;
-  if (iscust.checked) {
+  
     custmin = document.getElementById("custmin");
     localStorage.custmin = custmin.value;
-  }
+  
   chrome.tabs.query({
     url: ["https://outlook.office365.com/mail/*", "https://outlook.office.com/mail/*"]
   }, function (tabs) {
