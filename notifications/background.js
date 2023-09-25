@@ -47,7 +47,7 @@ function getUpComingMeeting(current) {
       console.log(result[0].includes(" 2 min"));
       if (result != "" && result[0].includes("Now") && !stopNow) {
         new Notification(`Reminder`, {
-          icon: "48.png",
+          icon: "reminder.png",
           body: `${result[0]}`,
           requireInteraction: true,
         });
@@ -65,7 +65,7 @@ function getUpComingMeeting(current) {
         !stop5
       ) {
         new Notification(`Reminder`, {
-          icon: "48.png",
+          icon: "reminder.png",
           body: `${result[0]}`,
         });
         stopNow = false;
@@ -80,7 +80,7 @@ function getUpComingMeeting(current) {
         !stop10
       ) {
         new Notification(`Reminder`, {
-          icon: "48.png",
+          icon: "reminder.png",
           body: `${result[0]}`,
         });
         stopNow = false;
@@ -95,7 +95,7 @@ function getUpComingMeeting(current) {
         !stop15
       ) {
         new Notification(`Reminder`, {
-          icon: "48.png",
+          icon: "reminder.png",
           body: `${result[0]}`,
         });
         stopNow = false;
@@ -110,7 +110,7 @@ function getUpComingMeeting(current) {
         !stopcust
       ) {
         new Notification(`Reminder`, {
-          icon: "48.png",
+          icon: "reminder.png",
           body: `${result[0]}`,
         });
         stopcust = true;
@@ -139,7 +139,7 @@ function show() {
         folders = [];
         if (result.activatedFolderIds.length > 0) {
           folders = [...result.activatedFolderIds];
-          folders.map((a) => getUnreadCount(current, a));
+          folders.forEach((a) => getUnreadCount(current, a));
         }
       });
 
