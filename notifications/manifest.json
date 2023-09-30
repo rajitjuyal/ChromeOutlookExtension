@@ -9,25 +9,19 @@
     "128": "icons/icon128.png"
   },
 
-  "permissions": [
-    "notifications",
-    "tabs",
-    "http://*/*",
-    "https://*/*",
-    "storage"
+  "permissions": ["notifications", "tabs", "storage", "scripting"],
+  "host_permissions": [
+    "https://outlook.office.com/mail/*",
+    "https://outlook.office365.com/mail/*"
   ],
   "options_page": "options.html",
-  "background": {
-    "scripts": ["background.js"]
-  },
-  "manifest_version": 2,
-  // "browser_action": {
-
-  //   "default_popup": "popup.html",
-  //   "icons": {
-  //     "128": "128.png"
-  //   }
+  // "options_ui": {
+  //   "page": "options.html",
+  //   "open_in_tab": false
   // },
-  // crbug.com/134315
-  "web_accessible_resources": ["48.png"]
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "manifest_version": 3
 }

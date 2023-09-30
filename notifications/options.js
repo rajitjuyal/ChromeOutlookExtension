@@ -1,198 +1,198 @@
-function ghost(isDeactivated) {
-  options.style.color = isDeactivated ? "graytext" : "black";
-  // The label color.
-  let folderDiv = document.getElementById("folderDiv");
-  folderDiv.disabled = isDeactivated; // The control manipulability.
-  let saveBtn = document.getElementById("save");
-  saveBtn.disabled = isDeactivated; // The control manipulability.
+// import {
+//   getOutlookTab,
+//   getStorageValue,
+//   setStorageValue,
+// } from "./chromeStorageUtil.js";
 
-  let folderNames = document.getElementsByClassName("folderNames");
+function ghost(isDeactivated) {
+  const options = document.getElementById("options");
+  options.style.color = isDeactivated ? "graytext" : "black";
+  const folderDiv = document.getElementById("folderDiv");
+  const saveBtn = document.getElementById("save");
+  const folderNames = document.getElementsByClassName("folderNames");
+
+  folderDiv.disabled = isDeactivated;
+  saveBtn.disabled = isDeactivated;
+
   for (let folderName of folderNames) {
     folderName.disabled = true;
   }
 }
 
-window.addEventListener("load", function () {
-  // Initialize the option controls.
-  options.isActivated.checked = JSON.parse(localStorage.isActivated);
-  // The display activation.
+async function init() {
+  const options = document.getElementById("options");
+  options.isActivated.checked = await getStorageValue("isActivated");
 
   if (!options.isActivated.checked) {
     ghost(true);
   }
 
-  // Set the display activation and frequency.
-  options.isActivated.onchange = function () {
-    localStorage.isActivated = options.isActivated.checked;
+  options.isActivated.addEventListener("change", async function () {
+    await setStorageValue("isActivated", options.isActivated.checked);
     ghost(!options.isActivated.checked);
-  };
+  });
 
-  getAllFolder();
-});
+  await getAllFolder();
+}
 
-// document.getElementById('refersh').addEventListener('click', getAllFolder);
-document
-  .getElementById("save")
-  .addEventListener("click", saveActivatedFolderList);
-
-function getAllFolder() {
+async function getAllFolder() {
   let min15 = document.getElementById("min15");
   let min10 = document.getElementById("min10");
   let min5 = document.getElementById("min5");
   let iscust = document.getElementById("iscust");
   let custmin = document.getElementById("custmin");
-  if (JSON.parse(localStorage.min15)) {
+  if (JSON.parse(await getStorageValue("min15"))) {
     min15.checked = true;
   }
-  if (JSON.parse(localStorage.min10)) {
+  if (JSON.parse(await getStorageValue("min10"))) {
     min10.checked = true;
   }
-  if (JSON.parse(localStorage.min5)) {
+  if (JSON.parse(await getStorageValue("min5"))) {
     min5.checked = true;
   }
-  if (JSON.parse(localStorage.iscust)) {
+  if (JSON.parse(await getStorageValue("iscust"))) {
     iscust.checked = true;
   }
 
-  custmin.value = JSON.parse(localStorage.custmin);
+  custmin.value = JSON.parse(await getStorageValue("custmin"));
 
-  chrome.tabs.query(
-    {
-      url: [
-        "https://outlook.office365.com/mail/*",
-        "https://outlook.office.com/mail/*",
-      ],
+  const [current] = await getOutlookTab();
+
+  if (!current) {
+    return;
+  }
+  const result = await chrome.scripting.executeScript({
+    target: { tabId: current.id },
+    func: () => {
+      var x = document.querySelectorAll(
+        "div[role=treeitem] > span:first-of-type"
+      );
+      var arr = [];
+      for (var item of x) {
+        arr.push(item.innerText);
+      }
+      return arr;
     },
-    function (tabs) {
-      var current = tabs[0];
-      if (!current) {
-        return;
-      }
-      chrome.tabs.executeScript(
-        current.id,
+  });
+
+  var originalFolderNames = result[0].result;
+  var folderNames = [...new Set(originalFolderNames)];
+  var list = document.getElementById("folderList");
+  let activatedFolders = [];
+  while (list.firstChild) {
+    list.removeChild(list.firstChild);
+  }
+  //get list of already activated folders
+  chrome.storage.local.get("activatedFolderIds", function (result) {
+    console.log(result.activatedFolderIds);
+    activatedFolders = result.activatedFolderIds;
+    folderNames.map(listOutlookFolder(activatedFolders, list));
+  });
+
+  chrome.storage.local.get(
+    {
+      folderNames: [],
+    },
+    function (result) {
+      folderNames.push({
+        folderId: result.folderNames,
+      });
+      chrome.storage.local.set(
         {
-          code: `var x= document.querySelectorAll(\"div[role=treeitem] > span:first-of-type\");
-      var arr=[];
-      for (var item of x){
-
-    	  arr.push(item.innerText);
-    	  
-      }
-      arr
-      `,
+          folderIds: folderNames,
         },
-        function (result) {
-          var originalFolderNames = result[0];
-          var folderNames = [...new Set(originalFolderNames)];
-          var list = document.getElementById("folderList");
-          let activatedFolders = [];
-          while (list.firstChild) {
-            list.removeChild(list.firstChild);
-          }
-          //get list of already activated folders
-          chrome.storage.local.get("activatedFolderIds", function (result) {
-            console.log(result.activatedFolderIds);
-            activatedFolders = result.activatedFolderIds;
-
-            folderNames.map((a) => {
-              let l = document.createElement("li");
-              let input = document.createElement("input");
-              input.type = "checkbox";
-              input.name = a;
-              if (activatedFolders && activatedFolders.includes(a)) {
-                input.checked = true;
-              }
-              input.setAttribute("class", "folderNames");
-              l.appendChild(input);
-              l.appendChild(document.createTextNode(a));
-              list.appendChild(l);
-            });
-          });
-
-          chrome.storage.local.get(
-            {
-              folderNames: [],
-            },
-            function (result) {
-              folderNames.push({
-                folderId: result.folderNames,
-              });
-              chrome.storage.local.set(
-                {
-                  folderIds: folderNames,
-                },
-                function () {
-                  // you can use strings instead of objects
-                  // if you don't want to define default values
-                  //          chrome.storage.local.get('folderIds', function (result) {
-                  //            console.log(result.folderIds);
-                  //          });
-                }
-              );
-            }
-          );
-        }
+        function () {}
       );
     }
   );
 }
 
-function saveActivatedFolderList() {
+function listOutlookFolder(activatedFolders, list) {
+  return (folder) => {
+    const li = document.createElement("li");
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.name = folder;
+    input.className = "folderNames"; // Use className for setting class
+    if (activatedFolders?.includes(folder)) {
+      // Use optional chaining to avoid errors
+      input.checked = true;
+    }
+    li.appendChild(input);
+    li.appendChild(document.createTextNode(folder));
+    list.appendChild(li);
+  };
+}
+
+async function saveActivatedFolderList() {
   let min15 = document.getElementById("min15");
-  localStorage.min15 = min15.checked;
+  await setStorageValue("min15", min15.checked);
   let min10 = document.getElementById("min10");
-  localStorage.min10 = min10.checked;
+  await setStorageValue("min10", min10.checked);
   let min5 = document.getElementById("min5");
-  localStorage.min5 = min5.checked;
+  await setStorageValue("min5", min5.checked);
   let iscust = document.getElementById("iscust");
-  localStorage.iscust = iscust.checked;
+  await setStorageValue("iscust", iscust.checked);
   let custmin = null;
 
   custmin = document.getElementById("custmin");
-  localStorage.custmin = custmin.value;
+  await setStorageValue("custmin", custmin.value);
 
-  chrome.tabs.query(
+  const [current] = await getOutlookTab();
+
+  if (!current) {
+    return;
+  }
+
+  var x = document.querySelectorAll("input.folderNames[type=checkbox]:checked");
+  var activatedFolderNames = [];
+  for (var item of x) {
+    activatedFolderNames.push(item.getAttribute("name"));
+  }
+  chrome.storage.local.get(
     {
-      url: [
-        "https://outlook.office365.com/mail/*",
-        "https://outlook.office.com/mail/*",
-      ],
+      activatedFolderNames: [],
     },
-    function (tabs) {
-      var current = tabs[0];
-      if (!current) {
-        return;
-      }
-
-      var x = document.querySelectorAll(
-        "input.folderNames[type=checkbox]:checked"
-      );
-      var activatedFolderNames = [];
-      for (var item of x) {
-        activatedFolderNames.push(item.getAttribute("name"));
-      }
-      chrome.storage.local.get(
+    function (result) {
+      chrome.storage.local.set(
         {
-          activatedFolderNames: [],
+          activatedFolderIds: activatedFolderNames,
         },
-        function (result) {
-          //        	  activatedFolderNames.push({
-          //                  activatedFolderIds: result.activatedFolderIds
-          //                });
-          chrome.storage.local.set(
-            {
-              activatedFolderIds: activatedFolderNames,
-            },
-            function () {
-              // you can use strings instead of objects
-              // if you don't want to define default values
-              chrome.storage.local.get("activatedFolderIds", function (result) {
-                console.log(result.activatedFolderIds);
-              });
-            }
-          );
+        function () {
+          // you can use strings instead of objects
+          // if you don't want to define default values
+          chrome.storage.local.get("activatedFolderIds", function (result) {
+            console.log(result.activatedFolderIds);
+          });
         }
       );
     }
   );
 }
+async function getStorageValue(key) {
+  return new Promise((resolve) => {
+    chrome.storage.local.get([key], (result) => {
+      resolve(result[key]);
+    });
+  });
+}
+
+async function setStorageValue(key, value) {
+  return new Promise((resolve) => {
+    chrome.storage.local.set({ [key]: value }, resolve);
+  });
+}
+
+async function getOutlookTab() {
+  return await chrome.tabs.query({
+    url: [
+      "https://outlook.office365.com/mail/*",
+      "https://outlook.office.com/mail/*",
+    ],
+  });
+}
+
+window.addEventListener("load", init);
+document
+  .getElementById("save")
+  .addEventListener("click", () => saveActivatedFolderList());
